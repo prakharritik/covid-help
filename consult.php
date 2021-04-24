@@ -22,12 +22,13 @@ if ( isset($_POST['email']) && isset($_POST['phno']) && isset($_POST['name']) &&
                 ':em' => $_POST['email'],
                 ':pr' => $_POST['prob'])
         );
-      
+                
       
         $_SESSION['success'] = "Successfully Applied. You will be hearing from us soon.";
         header("Location: consult.php");
         return;
       
+
     }  
 
 
@@ -44,7 +45,7 @@ if ( isset($_POST['email']) && isset($_POST['phno']) && isset($_POST['name']) &&
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="viewport" content="initial-scale=1, maximum-scale=1">
       <!-- site metas -->
-      <title>Protect</title>
+      <title>Consult a Doctor</title>
       <meta name="keywords" content="">
       <meta name="description" content="">
       <meta name="author" content="">
@@ -70,25 +71,24 @@ if ( isset($_POST['email']) && isset($_POST['phno']) && isset($_POST['name']) &&
       <div class="header_section header_bg">
          <div class="container-fluid">
                <div class="main">
-                  <div class="logo"><a href="index.html"><img src="images/logo.png"></a></div>
+                  <div class="logo"><a href="index.php"><img src="logo.svg"></a></div>
                   <div class="menu_text">
                      <ul>
                         <div class="togle_">
                            <div class="menu_main">
                               <ul>
-                                 <li><a href="#">Login</a></li>
-                                 <li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
+                                 <li><a href="doctors.php">Doctors</a></li>
                               </ul>
                            </div>
                         </div>
                         <div id="myNav" class="overlay">
                            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                            <div class="overlay-content">
-                              <a href="index.html">Home</a>
-                              <a href="protect.html">Protect</a>
-                              <a href="about.html">About</a>
-                              <a href="doctors.html">Doctors</a>
-                              <a href="news.html">News</a>
+                              <a href="index.php">Home</a>
+                              <a href="about.html">Precautions</a>
+                              <a href="doctors.php">Doctors</a>
+                              <a href="consult.php">Consult Doctors</a>
+                              <a href="news.html">Covid Stats</a>
                            </div>
                         </div>
                         <span class="navbar-toggler-icon"></span>
@@ -124,48 +124,29 @@ if ( isset($_POST['email']) && isset($_POST['phno']) && isset($_POST['name']) &&
       </div>
       <!-- protect section end -->
       <!-- footer section start -->
-      <div class="footer_section layout_padding margin_top90">
+      <div class="footer_section layout_padding">
          <div class="container">
             <div class="footer_section_2">
+                                    <h2 class="useful_text text-center">Resources</h2>
                <div class="row">
-                  <div class="col-lg-3 col-sm-6">
-                     <h2 class="useful_text">Resources</h2>
+                  <div class="col-lg-6 col-sm-6">
+
+                     <div class="footer_menu">
+                        <ul>                                                    
+                           <li><a href="index.php">Home</a></li>
+                           <li><a href="about.html">Precautions</a></li>
+                           <li><a href="https://www.cowin.gov.in/home">Get Vaccinated</a></li>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
                      <div class="footer_menu">
                         <ul>
-                           <li><a href="#">What we do</a></li>
-                           <li><a href="#">Media</a></li>
-                           <li><a href="#">Travel Advice</a></li>
-                           <li><a href="#">Protection</a></li>
-                           <li><a href="#">Care</a></li>
+                           <li><a href="doctors.php">Doctors</a></li>
+                           <li><a href="consult.php">Consult Doctors</a></li>
+                           <li><a href="news.html">Covid Stats</a></li>
                         </ul>
                      </div>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                     <h2 class="useful_text">About</h2>
-                     <p class="footer_text">Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various</p>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                     <h2 class="useful_text">Contact Us</h2>
-                     <div class="location_text">
-                        <ul>
-                           <li>
-                              <a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i>
-                              <span class="padding_15">Location</span></a>
-                           </li>
-                           <li>
-                              <a href="#"><i class="fa fa-phone" aria-hidden="true"></i>
-                              <span class="padding_15">Call +01 1234567890</span></a>
-                           </li>
-                           <li>
-                              <a href="#"><i class="fa fa-envelope" aria-hidden="true"></i>
-                              <span class="padding_15">demo@gmail.com</span></a>
-                           </li>
-                        </ul>
-                     </div>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                     <h2 class="useful_text">countrys</h2>
-                     <div class="map_image"><img src="images/map-bg.png"></div>
                   </div>
                </div>
             </div>
