@@ -1,3 +1,38 @@
+<?php // Do not put any HTML above this line
+session_start();
+
+require_once "pdo.php";
+
+if ( isset($_POST['email']) && isset($_POST['phno']) && isset($_POST['name']) ) {
+    if ( strlen($_POST['email']) < 1 || strlen($_POST['phno']) < 1 || strlen($_POST['name']) < 1) {
+        $_SESSION['error'] = "All fields are required";
+        header("Location: doctors.php");
+        return;
+    }  else if (strpos($_POST['email'], "@") === false) {
+        $_SESSION['error'] = "Email must have an at-sign (@)";
+        header("Location: doctors.php");
+        return;
+    }else { 
+
+    $stmt = $pdo->prepare('INSERT INTO doctors (name, phno, email) VALUES (  :fn, :ln, :em)');
+
+        $stmt->execute(array(
+                ':fn' => $_POST['name'],
+                ':ln' => $_POST['phno'],
+                ':em' => $_POST['email'])
+        );
+                
+      
+        $_SESSION['success'] = "Successfully Applied. You will be hearing from us soon.";
+        header("Location: doctors.php");
+        return;
+      
+
+    }  
+
+
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
    <head>
@@ -32,28 +67,37 @@
    </head>
    <body>
       <!--header section start -->
+      <?php
+if(isset($_SESSION['success'])){
+  echo '<div class="alert alert-success" role="alert">'.$_SESSION['success'].'</div>';
+  unset($_SESSION['success']);
+}
+if(isset($_SESSION['error'])){
+  echo '<div class="alert alert-danger" role="alert">'.$_SESSION['error'].'</div>';
+  unset($_SESSION['error']);
+}
+?>
       <div class="header_section header_bg">
          <div class="container-fluid">
                <div class="main">
-                  <div class="logo"><a href="index.html"><img src="images/logo.png"></a></div>
+                  <div class="logo"><a href="index.php"><img src="logo.svg"></a></div>
                   <div class="menu_text">
                      <ul>
                         <div class="togle_">
                            <div class="menu_main">
                               <ul>
-                                 <li><a href="#">Login</a></li>
-                                 <li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
+                                 <li><a href="doctors.php">Doctors</a></li>
                               </ul>
                            </div>
                         </div>
                         <div id="myNav" class="overlay">
                            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                            <div class="overlay-content">
-                              <a href="index.html">Home</a>
-                              <a href="protect.html">Protect</a>
-                              <a href="about.html">About</a>
-                              <a href="doctors.html">Doctors</a>
-                              <a href="news.html">News</a>
+                              <a href="index.php">Home</a>
+                              <a href="about.html">Precautions</a>
+                              <a href="doctors.php">Doctors</a>
+                              <a href="consult.php">Consult Doctors</a>
+                              <a href="news.html">Covid Stats</a>
                            </div>
                         </div>
                         <span class="navbar-toggler-icon"></span>
@@ -66,35 +110,30 @@
             <!-- banner section start -->
             <div class="container">
                <div class="about_taital_main">
-                  <h2 class="about_tag">Doctors Corona Virus</h2>
+                  <h2 class="about_tag">Doctors</h2>
                   <div class="about_menu">
                      <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li>Doctors</li>
+                        
                      </ul>
                   </div>
                </div>
             </div>
          <!-- banner section end -->
       </div>
+      
       <!-- header section end -->
       <!-- doctor section start -->
-      <div class="doctors_section layout_padding">
-         <div class="container-fluid">
-            <div class="row">
-               <div class="col-sm-12">
-                  <div class="taital_main">
-                     <div class="taital_left">
-                        <div class="play_icon"><img src="images/play-icon.png"></div>
-                     </div>
-                     <div class="taital_right">
-                        <h1 class="doctor_taital">What doctors say..</h1>
-                        <p class="doctor_text">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look</p>
-                        <div class="readmore_bt"><a href="#">Read More</a></div>
-                     </div>
-                  </div>
+      <div class="update_section">
+         <div class="container">
+            <h1 class="update_taital">Doctor's Voluntary Form </h1>
+            <form method="post" >
+               <div class="form-group">
+                   <input class="update_mail" placeholder="Name" id="comment" name="name" required>
+                   <input class="update_mail" placeholder="E-Mail" id="comment" name="email" required>
+                   <input class="update_mail" placeholder="Phone Number" id="comment" name="phno" required>
                </div>
-            </div>
+               <button type="submit" class="subscribe_bt m-auto d-block">Submit</button>
+            </form>
          </div>
       </div>
       <!-- doctor section end -->
@@ -102,45 +141,26 @@
       <div class="footer_section layout_padding">
          <div class="container">
             <div class="footer_section_2">
+                                    <h2 class="useful_text text-center">Resources</h2>
                <div class="row">
-                  <div class="col-lg-3 col-sm-6">
-                     <h2 class="useful_text">Resources</h2>
+                  <div class="col-lg-6 col-sm-6">
+
+                     <div class="footer_menu">
+                        <ul>                                                    
+                           <li><a href="index.php">Home</a></li>
+                           <li><a href="about.html">Precautions</a></li>
+                           <li><a href="https://www.cowin.gov.in/home">Get Vaccinated</a></li>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
                      <div class="footer_menu">
                         <ul>
-                           <li><a href="#">What we do</a></li>
-                           <li><a href="#">Media</a></li>
-                           <li><a href="#">Travel Advice</a></li>
-                           <li><a href="#">Protection</a></li>
-                           <li><a href="#">Care</a></li>
+                           <li><a href="doctors.php">Doctors</a></li>
+                           <li><a href="consult.php">Consult Doctors</a></li>
+                           <li><a href="news.html">Covid Stats</a></li>
                         </ul>
                      </div>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                     <h2 class="useful_text">About</h2>
-                     <p class="footer_text">Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various</p>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                     <h2 class="useful_text">Contact Us</h2>
-                     <div class="location_text">
-                        <ul>
-                           <li>
-                              <a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i>
-                              <span class="padding_15">Location</span></a>
-                           </li>
-                           <li>
-                              <a href="#"><i class="fa fa-phone" aria-hidden="true"></i>
-                              <span class="padding_15">Call +01 1234567890</span></a>
-                           </li>
-                           <li>
-                              <a href="#"><i class="fa fa-envelope" aria-hidden="true"></i>
-                              <span class="padding_15">demo@gmail.com</span></a>
-                           </li>
-                        </ul>
-                     </div>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                     <h2 class="useful_text">countrys</h2>
-                     <div class="map_image"><img src="images/map-bg.png"></div>
                   </div>
                </div>
             </div>

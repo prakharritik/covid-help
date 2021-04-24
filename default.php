@@ -1,3 +1,24 @@
+<?php
+session_start();
+require_once "pdo.php";
+
+$resources=$meds=array();
+if(isset($_POST['resource']) && isset($_POST['state'])){
+   if(strlen($_POST['resource'])<1 || strlen($_POST['state'])<1){}
+   else{
+      $stmt = $pdo->prepare('SELECT * FROM "Resources" WHERE location=:em ');
+      $stmt->execute(array(':em' => $_POST['state']));
+      $resources = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      $stmt = $pdo->prepare('SELECT * FROM "meds" WHERE name=:em');
+      $stmt->execute(array(':em' => $_POST['resource']));
+      $meds = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      require_once "littleApp.php";
+   }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
    <head>
@@ -29,6 +50,18 @@
       <link rel="stylesheet" href="css/owl.carousel.min.css">
       <link rel="stylesheet" href="css/owl.theme.default.min.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+      <style>
+
+         .search_section{
+           width: 100%;
+    float: left;
+    padding: 90px 0px;
+    padding-top: 90px;
+    padding-right: 0px;
+    padding-bottom: 90px;
+    padding-left: 0px;
+         }
+      </style>
    </head>
    <body>
       <!--header section start -->
@@ -41,7 +74,7 @@
                         <div class="togle_">
                            <div class="menu_main">
                               <ul>
-                                 <li><a href="#">Doctor Login</a></li>
+                                 <li><a href="doctors.php">Doctors</a></li>
                               </ul>
                            </div>
                         </div>
@@ -62,6 +95,7 @@
                   </div>
                </div>
             </div>
+
       <!-- banner section start -->
       <div class="banner_section layout_padding">
          <div class="container">
@@ -155,8 +189,9 @@
                </div>
                <div class="col-md-6">
                   <h1 class="about_taital">Coronavirus what it is?</span></h1>
-                  <p class="about_text">when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using</p>
-                  <div class="read_bt"><a href="#">Read More</a></div>
+                  <p class="about_text">Coronavirus disease (COVID-19) is an infectious disease caused by a newly discovered coronavirus.
+Most people who fall sick with COVID-19 will experience mild to moderate symptoms and recover without special treatment</p>
+                  <div class="read_bt"><a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019">Read More</a></div>
                </div>
             </div>
          </div>
@@ -181,6 +216,24 @@
             </div>
          </div>
       </div>
+<div class="search_section layout_padding">
+      <h1 class="protect_taital text-center mt-5">Need any kind of medical resource? Search here</h1>
+   <form style="width: 80%;display: block;margin: auto;" method="post" action="results.php">
+  <div class="row mb-2">
+    <div class="col-12 col-md-6 pt-3">
+      <input type="text" name="resource" class="form-control" placeholder="Resource Name">
+    </div>
+    <div class="col-12 col-md-6 pt-3">
+      <input type="text" name="state" class="form-control" placeholder="State">
+    </div>
+  </div>
+  <button type="submit" class="subscribe_bt m-auto d-block">Search</button>
+</form>
+<div>
+</div>
+  </div>
+
+  
       <!-- doctor section end -->
       <!-- news section start -->
       <div class="news_section layout_padding">
@@ -236,75 +289,8 @@
       </div>
       <!-- news section end -->
       <!-- update section start -->
-      <div class="update_section">
-         <div class="container">
-            <h1 class="update_taital">Get Every Update.... </h1>
-            <form action="/action_page.php">
-               <div class="form-group">
-                   <textarea class="update_mail" placeholder="Massage" rows="5" id="comment" name="Massage"></textarea>
-               </div>
-               <div class="subscribe_bt"><a href="#">Subscribe Now</a></div>
-            </form>
-         </div>
-      </div>
+      
       <!-- update section end -->
-
-      <!-- Start of Donations section -->
-      <div class="about_section layout_padding">
-         <div class="container">
-            <!-- <div class="row">
-               <div class="col-md-6">
-                  <h1 class="about_taital" style="text-align: right;">Donations</h1>
-               </div>
-               <div class="col-md-6">
-                  <h1 class="about_taital" style="text-align: left;">Section</h1>
-               </div>
-            </div> -->
-            <div class="row">
-               <div class="col-md-6">
-                  <div class="about_img"><img src="images/blood-donation.png"></div>
-               </div>
-               <div class="col-md-6">
-                  <h2 class="about_taital">Plasma Donataions</span></h2>
-                  <p class="about_text">“A single pint can save three lives, a single gesture can create a million smiles.”</p>
-                  <p class="about_text">Links -
-
-                     <br> <a href="https://covidplasma.online/" style="color: rgb(156, 160, 221);">Covid Plasma</a>
-                     <br> <a href="https://dhoondh.com/" style="color: rgb(156, 160, 221);">dhoondh.com</a>
-                     <br> <a href="https://needplasma.in/" style="color: rgb(156, 160, 221);">Need Plasma</a>
-                  </p>
-               </div>
-               <!-- <p class="about_text"> Links -</p>
-                  <ul>
-                     <li><a href="https://covidplasma.online/">Covid Plasma</a></li>
-                     <li><a href="https://dhoondh.com/">dhoondh.com</a></li>
-                     <li><a href="https://needplasma.in/">Need Plasma</a></li>
-                  </ul> -->
-            </div>
-                  <!-- <p class="about_text"> Links -</p>
-                  <ul>
-                     <li><a href="https://covidplasma.online/">Covid Plasma</a></li>
-                     <li><a href="https://dhoondh.com/">dhoondh.com</a></li>
-                     <li><a href="https://needplasma.in/">Need Plasma</a></li>
-                  </ul> -->
-         </div>
-      </div>
-      <div class="about_section layout_padding">
-         <div class="container">
-            <div class="row">
-               <div class="col-md-6">
-                  <h2 class="about_taital">Donations for Hospitals</span></h2>
-                  <p class="about_text">There is an acute shortage of Beds, Medicines, Injections and Oxygen cyclinders in hospitals. Be a part of the of the good cause, and Donate.</p>
-                  <div class="read_bt"><a href="https://www.donatekart.com/">Donate</a></div>
-               </div>
-               <div class="col-md-6">
-                  <div class="about_img"><img src="images/charity.jpg"></div>
-               </div>
-            </div>
-         </div>
-      </div>
-      <!-- End of Donations section -->
-
       <!-- footer section start -->
       <div class="footer_section layout_padding">
          <div class="container">

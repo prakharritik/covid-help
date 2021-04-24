@@ -1,3 +1,24 @@
+<?php
+session_start();
+require_once "pdo.php";
+
+$resources=$meds=array();
+if(isset($_POST['resource']) && isset($_POST['state'])){
+   if(strlen($_POST['resource'])<1 || strlen($_POST['state'])<1){}
+   else{
+      $stmt = $pdo->prepare('SELECT * FROM "Resources" WHERE location=:em ');
+      $stmt->execute(array(':em' => $_POST['state']));
+      $resources = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      $stmt = $pdo->prepare('SELECT * FROM "meds" WHERE name=:em');
+      $stmt->execute(array(':em' => $_POST['resource']));
+      $meds = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      require_once "littleApp.php";
+   }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
    <head>
@@ -9,7 +30,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="viewport" content="initial-scale=1, maximum-scale=1">
       <!-- site metas -->
-      <title>Covid Statistics</title>
+      <title>Results</title>
       <meta name="keywords" content="">
       <meta name="description" content="">
       <meta name="author" content="">
@@ -29,6 +50,96 @@
       <link rel="stylesheet" href="css/owl.carousel.min.css">
       <link rel="stylesheet" href="css/owl.theme.default.min.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+      <style>
+               <style>
+         .cards {
+  display: flex;width: 100%;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cards_item {
+  display: flex;
+  padding: 1rem;
+  width: 100%;
+}
+
+@media (min-width: 40rem) {
+  .cards_item {
+    width: 100%;
+  }
+
+}
+
+@media (min-width: 56rem) {
+  .cards_item {
+    width: 33.3333%;
+  }
+}
+
+.card {
+  background-color: white;
+  border-radius: 0.25rem;
+  box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+}
+
+.card_content {
+  padding: 1rem;
+  background-color: #923cb5;
+background-image: linear-gradient(147deg, #923cb5 0%, #000000 74%);
+  height: 100%;
+}
+
+.card_title {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: capitalize;
+  margin: 0px;
+}
+
+.card_text {
+  color: #ffffff;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;    
+  font-weight: 400;
+}
+.bttn {
+  color: #ffffff;
+  padding: 0.8rem;
+  font-size: 14px;
+  text-transform: uppercase;
+  border-radius: 4px;
+  font-weight: 400;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #111;
+}
+
+.bttn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+         .search_section{
+           width: 100%;
+    float: left;
+    padding: 90px 0px;
+    padding-top: 90px;
+    padding-right: 0px;
+    padding-bottom: 90px;
+    padding-left: 0px;
+         }
+      </style>
+      </style>
    </head>
    <body>
       <!--header section start -->
@@ -65,18 +176,91 @@
             <!-- banner section start -->
             <div class="container">
                <div class="about_taital_main">
-                  <h2 class="about_tag">News Corona Virus</h2>
+                  <h2 class="about_tag">Results</h2>
+                  <div class="about_menu">
+                     <ul>
+                        
+                     </ul>
+                  </div>
                </div>
             </div>
          <!-- banner section end -->
       </div>
+      <?php
+if(isset($_SESSION['success'])){
+  echo '<div class="alert alert-success" role="alert">'.$_SESSION['success'].'</div>';
+  unset($_SESSION['success']);
+}
+if(isset($_SESSION['error'])){
+  echo '<div class="alert alert-danger" role="alert">'.$_SESSION['error'].'</div>';
+  unset($_SESSION['error']);
+}
+?>
       <!-- header section end -->
-      <!-- news section start -->
-      <div class="news_section layout_padding">
+      <!-- doctor section start -->
+     <div class="search_section layout_padding">
+      <h1 class="protect_taital text-center mt-5">Need any kind of medical resource? Search here</h1>
+   <form style="width: 80%;display: block;margin: auto;" method="post">
+  <div class="row mb-2">
+    <div class="col-12 col-md-6 pt-3">
+      <input type="text" name="resource" class="form-control" placeholder="Resource Name">
+    </div>
+    <div class="col-12 col-md-6 pt-3">
+      <input type="text" name="state" class="form-control" placeholder="State">
+    </div>
+  </div>
+  <button type="submit" class="subscribe_bt m-auto d-block">Search</button>
+</form>
+<div>
 
-         </div>
+   <?php
+   if(!sizeof($resources)==0 ||  !sizeof($meds)==0)
+   echo'<h1 class="display-8 text-center mt-5">Resources</h1>';
+   ?>
+
+<div class="main mb-5">
+  <ul class="cards">
+  
+   <?php
+
+   foreach ($resources as $key) {
+      echo '
+   <li class="cards_item">
+      <div class="card">
+        <div class="card_content">
+          <h2 class="card_title">'.$key['location'].'</h2>
+          <p class="card_text">'.$key['text'].'</p>
+          <a href="'.$key['link'].'"><button class="bttn card_btn">Read More</button></a>
+        </div>
       </div>
-      <!-- news section end -->
+    </li>';
+   }
+
+   foreach ($meds as $key) {
+      echo '
+   <li class="cards_item">
+      <div class="card">
+        <div class="card_content">
+          <h2 class="card_title">'.$key['name'].'</h2>
+          <p class="card_text">'.$key['text'].'</p>
+          <a href="'.$key['link'].'"><button class="bttn card_btn">Read More</button></a>
+        </div>
+      </div>
+    </li>';
+   }
+   echo "</ul></div>";
+   if(isset($string)){
+      echo'<h1 class="display-8 text-center mt-5 mb-5">Resources from Social Platforms</h1>';
+   foreach($string as $items)
+    {    
+      echo '<iframe border=0 align="center" conversation="none" frameborder=0 style="width:100%;height:450px;" 
+ src="https://twitframe.com/show?url=https://twitter.com/'.$items['user']['screen_name'].'/status/'.$items['id'].'"></iframe>';
+        
+    }}
+   ?>
+   
+</div></div>
+      <!-- doctor section end -->
       <!-- footer section start -->
       <div class="footer_section layout_padding">
          <div class="container">
@@ -108,6 +292,7 @@
       </div>
       <!-- footer section end -->
       <!-- copyright section start -->
+
       <!-- copyright section end -->
       <!-- Javascript files-->
       <script src="js/jquery.min.js"></script>
